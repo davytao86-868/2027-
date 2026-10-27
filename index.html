@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>桐庐欣亚针纺织有限公司 - 样单生产进度管理系统</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: "Microsoft YaHei", Arial, sans-serif; background: #f4f7f9; margin: 0; padding: 20px; color: #333; }
+    
+    /* 密码登录遮罩层样式 */
+    #loginOverlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(30, 58, 138, 0.9); display: flex; justify-content: center; align-items: center; z-index: 9999;
+    }
+    .login-card {
+      background: #fff; padding: 30px; border-radius: 10px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.2); width: 320px;
+    }
+    .login-card h2 { font-size: 18px; color: #1e3a8a; margin-top: 0; }
+    .login-input { width: 100%; padding: 10px; margin: 15px 0; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
+    .login-btn { width: 100%; padding: 10px; background: #2563eb; color: #white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; font-weight: bold; }
+    .login-btn:hover { background: #1d4ed8; }
+
+    /* 主界面样式 */
+    #mainApp { display: none; }
+    header { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 15px 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; }
+    h1 { margin: 0; color: #1e3a8a; font-size: 20px; }
+    .search-box { padding: 8px 15px; width: 280px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-size: 13px; }
+    th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #edf2f7; }
+    th { background-color: #f1f5f9; color: #475569; font-weight: 600; white-space: nowrap; }
+    tr:hover { background-color: #f8fafc; }
+    .preview-container { position: relative; display: inline-block; }
+    .photo-link { color: #2563eb; text-decoration: none; font-weight: 500; }
+    .photo-link:hover { text-decoration: underline; }
+    
+    .preview-popover {
+      display: none; position: absolute; top: -10px; left: 100%; margin-left: 10px; z-index: 100;
+      background: #fff; padding: 5px; border: 1px solid #ddd; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .preview-popover img { max-width: 260px; max-height: 260px; border-radius: 4px; display: block; }
+    .preview-container:hover .preview-popover { display: block; }
+  </style>
+</head>
+<body>
+
+  <!-- 密码登录框 -->
+  <div id="loginOverlay">
+    <div class="login-card">
+      <h2>桐庐欣亚针纺织有限公司</h2>
+      <p style="font-size: 13px; color: #666;">内部系统，请输入访问密码</p >
+      <input type="password" id="pwdInput" class="login-input" placeholder="请输入密码">
+      <button class="login-btn" onclick="verifyPassword()">进入系统</button>
+    </div>
+  </div>
+
+  <!-- 主体内容（输入正确密码后显示） -->
+  <div id="mainApp">
+    <header>
+      <h1>桐庐欣亚针纺织有限公司 · 样单生产进度追踪</h1>
+      <input type="text" id="searchInput" class="search-box" onkeyup="filterTable()" placeholder="🔍 快速查找款号、纱线、加工厂...">
+    </header>
+
+    <table id="sampleTable">
+      <thead>
+        <tr>
+          <th>样单来样日期</th>
+          <th>款号</th>
+          <th>客供原样</th>
+          <th>排纱日期</th>
+          <th>纱线品种 & 供应商</th>
+          <th>机织日期</th>
+          <th>机织加工厂</th>
+          <th>后道日期</th>
+          <th>后道加工厂</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2026-10-20</td>
+          <td><strong>XY-2026-001</strong></td>
+          <td>
+            <div class="preview-container">
+              <a href=" " target="_blank" class="photo-link">📷 原样图</a >
+              <div class="preview-popover">< img src="sample01.jpg" alt="客供原样"></div>
+            </div>
+          </td>
+          <td>2026-10-21</td>
+          <td>精梳棉 32S/2<br><small style="color:#666">桐庐百泰纺织</small></td>
+          <td>2026-10-23</td>
+          <td>桐庐顺发织造厂</td>
+          <td>2026-10-25</td>
+          <td>欣亚后道整理厂</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // 验证密码逻辑（您可以把 "xinya888" 改成您想要的密码）
+    function verifyPassword() {
+      const inputVal = document.getElementById("pwdInput").value;
+      if (inputVal === "xy888") {
+        document.getElementById("loginOverlay").style.display = "none";
+        document.getElementById("mainApp").style.display = "block";
+      } else {
+        alert("密码错误，请重新输入！");
+      }
+    }
+
+    // 快速搜索筛选功能
+    function filterTable() {
+      const input = document.getElementById("searchInput");
+      const filter = input.value.toUpperCase();
+      const table = document.getElementById("sampleTable");
+      const tr = table.getElementsByTagName("tr");
+
+      for (let i = 1; i < tr.length; i++) {
+        let visible = false;
+        const tds = tr[i].getElementsByTagName("td");
+        for (let j = 0; j < tds.length; j++) {
+          if (tds[j]) {
+            const txtValue = tds[j].textContent || tds[j].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              visible = true;
+              break;
+            }
+          }
+        }
+        tr[i].style.display = visible ? "" : "none";
+      }
+    }
+  </script>
+</body>
+</html>
