@@ -18,118 +18,275 @@
     }
     .login-card h2 { font-size: 18px; color: #1e3a8a; margin-top: 0; }
     .login-input { width: 100%; padding: 10px; margin: 15px 0; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
-    .login-btn { width: 100%; padding: 10px; background: #2563eb; color: #white; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; font-weight: bold; }
+    .login-btn { width: 100%; padding: 10px; background: #2563eb; color: #fff; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; font-weight: bold; }
     .login-btn:hover { background: #1d4ed8; }
 
     /* 主界面样式 */
-    #mainApp { display: none; }
-    header { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 15px 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; }
+    #mainApp { display: none; max-width: 1400px; margin: 0 auto; }
+    header { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 15px 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
     h1 { margin: 0; color: #1e3a8a; font-size: 20px; }
-    .search-box { padding: 8px 15px; width: 280px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
-    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-size: 13px; }
-    th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #edf2f7; }
+    .header-actions { display: flex; gap: 10px; align-items: center; }
+    .search-box { padding: 8px 15px; width: 240px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
+    .btn { padding: 8px 14px; background: #2563eb; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 13px; font-weight: 500; }
+    .btn:hover { background: #1d4ed8; }
+    .btn-success { background: #10b981; }
+    .btn-success:hover { background: #059669; }
+    .btn-danger { background: #ef4444; }
+    .btn-danger:hover { background: #dc2626; }
+    .btn-secondary { background: #64748b; }
+    .btn-secondary:hover { background: #475569; }
+
+    /* 表格样式 */
+    .table-container { background: #fff; border-radius: 8px; overflow-x: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 1000px; }
+    th, td { padding: 12px 10px; text-align: left; border-bottom: 1px solid #edf2f7; vertical-align: middle; }
     th { background-color: #f1f5f9; color: #475569; font-weight: 600; white-space: nowrap; }
     tr:hover { background-color: #f8fafc; }
+    
     .preview-container { position: relative; display: inline-block; }
-    .photo-link { color: #2563eb; text-decoration: none; font-weight: 500; }
+    .photo-link { color: #2563eb; text-decoration: none; font-weight: 500; cursor: pointer; }
     .photo-link:hover { text-decoration: underline; }
     
     .preview-popover {
-      display: none; position: absolute; top: -10px; left: 100%; margin-left: 10px; z-index: 100;
-      background: #fff; padding: 5px; border: 1px solid #ddd; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: none; position: absolute; top: -110px; left: 100%; margin-left: 10px; z-index: 100;
+      background: #fff; padding: 6px; border: 1px solid #ccc; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
-    .preview-popover img { max-width: 260px; max-height: 260px; border-radius: 4px; display: block; }
+    .preview-popover img { max-width: 200px; max-height: 200px; border-radius: 4px; display: block; object-fit: contain; }
     .preview-container:hover .preview-popover { display: block; }
+
+    /* 弹窗样式 */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
+    .modal-content { background: #fff; padding: 25px; border-radius: 8px; width: 500px; max-width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+    .modal-content h3 { margin-top: 0; color: #1e3a8a; font-size: 18px; margin-bottom: 15px; }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; color: #475569; }
+    .form-group input, .form-group textarea { width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
+    .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
   </style>
 </head>
 <body>
 
-  <!-- 密码登录框 -->
+  <!-- 密码登录框（密码已改为 xy888） -->
   <div id="loginOverlay">
     <div class="login-card">
       <h2>桐庐欣亚针纺织有限公司</h2>
-      <p style="font-size: 13px; color: #666;">内部系统，请输入访问密码</p >
-      <input type="password" id="pwdInput" class="login-input" placeholder="请输入密码">
+      <p style="font-size: 13px; color: #666;">内部系统，请输入访问密码 (xy888)</p >
+      <input type="password" id="pwdInput" class="login-input" placeholder="请输入密码" onkeydown="if(event.keyCode==13) verifyPassword()">
       <button class="login-btn" onclick="verifyPassword()">进入系统</button>
     </div>
   </div>
 
-  <!-- 主体内容（输入正确密码后显示） -->
+  <!-- 主体内容 -->
   <div id="mainApp">
     <header>
       <h1>桐庐欣亚针纺织有限公司 · 样单生产进度追踪</h1>
-      <input type="text" id="searchInput" class="search-box" onkeyup="filterTable()" placeholder="🔍 快速查找款号、纱线、加工厂...">
+      <div class="header-actions">
+        <input type="text" id="searchInput" class="search-box" onkeyup="renderTable()" placeholder="🔍 快速查找款号、纱线、加工厂...">
+        <button class="btn btn-success" onclick="openAddModal()">+ 新增样单</button>
+        <button class="btn btn-secondary" onclick="exportData()">导出备份</button>
+        <button class="btn btn-secondary" onclick="resetData()">恢复默认</button>
+      </div>
     </header>
 
-    <table id="sampleTable">
-      <thead>
-        <tr>
-          <th>样单来样日期</th>
-          <th>款号</th>
-          <th>客供原样</th>
-          <th>排纱日期</th>
-          <th>纱线品种 & 供应商</th>
-          <th>机织日期</th>
-          <th>机织加工厂</th>
-          <th>后道日期</th>
-          <th>后道加工厂</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>2026-10-20</td>
-          <td><strong>XY-2026-001</strong></td>
-          <td>
-            <div class="preview-container">
-              <a href=" " target="_blank" class="photo-link">📷 原样图</a >
-              <div class="preview-popover">< img src="sample01.jpg" alt="客供原样"></div>
-            </div>
-          </td>
-          <td>2026-10-21</td>
-          <td>精梳棉 32S/2<br><small style="color:#666">桐庐百泰纺织</small></td>
-          <td>2026-10-23</td>
-          <td>桐庐顺发织造厂</td>
-          <td>2026-10-25</td>
-          <td>欣亚后道整理厂</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-container">
+      <table id="sampleTable">
+        <thead>
+          <tr>
+            <th>来样日期</th>
+            <th>款号</th>
+            <th>客供原样图片</th>
+            <th>排纱日期</th>
+            <th>纱线品种 & 供应商</th>
+            <th>机织日期</th>
+            <th>机织厂名称</th>
+            <th>后道加工工艺 & 名称</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- 数据动态渲染 -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 新增/编辑弹窗 -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <h3 id="modalTitle">新增样单</h3>
+      <input type="hidden" id="editIndex">
+      <div class="form-group">
+        <label>来样日期：</label>
+        <input type="date" id="f_sampleDate">
+      </div>
+      <div class="form-group">
+        <label>款号：</label>
+        <input type="text" id="f_styleNo" placeholder="例如：XY-2026-001">
+      </div>
+      <div class="form-group">
+        <label>客供原样图片链接 (URL 或图片文件名)：</label>
+        <input type="text" id="f_photo" placeholder="例如：sample01.jpg 或 http://...">
+      </div>
+      <div class="form-group">
+        <label>排纱日期：</label>
+        <input type="date" id="f_yarnDate">
+      </div>
+      <div class="form-group">
+        <label>纱线品种 & 供应商：</label>
+        <input type="text" id="f_yarnInfo" placeholder="例如：精梳棉 32S/2 (桐庐百泰纺织)">
+      </div>
+      <div class="form-group">
+        <label>机织日期：</label>
+        <input type="date" id="f_weaveDate">
+      </div>
+      <div class="form-group">
+        <label>机织厂名称：</label>
+        <input type="text" id="f_weaveFactory" placeholder="例如：桐庐顺发织造厂">
+      </div>
+      <div class="form-group">
+        <label>后道加工工艺 & 名称：</label>
+        <input type="text" id="f_postInfo" placeholder="例如：水洗/定型 - 欣亚后道整理厂">
+      </div>
+      <div class="modal-buttons">
+        <button class="btn btn-secondary" onclick="closeModal()">取消</button>
+        <button class="btn btn-success" onclick="saveData()">保存</button>
+      </div>
+    </div>
   </div>
 
   <script>
-    // 验证密码逻辑（您可以把 "xinya888" 改成您想要的密码）
+    // 默认初始数据
+    const defaultData = [
+      {
+        sampleDate: "2026-10-20",
+        styleNo: "XY-2026-001",
+        photo: "sample01.jpg",
+        yarnDate: "2026-10-21",
+        yarnInfo: "精梳棉 32S/2 / 桐庐百泰纺织",
+        weaveDate: "2026-10-23",
+        weaveFactory: "桐庐顺发织造厂",
+        postInfo: "水洗、烫标 / 欣亚后道整理厂"
+      }
+    ];
+
+    let samples = JSON.parse(localStorage.getItem("xinya_samples")) || defaultData;
+
+    // 验证密码（已改为 xy888）
     function verifyPassword() {
       const inputVal = document.getElementById("pwdInput").value;
       if (inputVal === "xy888") {
         document.getElementById("loginOverlay").style.display = "none";
         document.getElementById("mainApp").style.display = "block";
+        renderTable();
       } else {
         alert("密码错误，请重新输入！");
       }
     }
 
-    // 快速搜索筛选功能
-    function filterTable() {
-      const input = document.getElementById("searchInput");
-      const filter = input.value.toUpperCase();
-      const table = document.getElementById("sampleTable");
-      const tr = table.getElementsByTagName("tr");
+    // 渲染表格
+    function renderTable() {
+      const keyword = document.getElementById("searchInput").value.toUpperCase();
+      const tbody = document.getElementById("tableBody");
+      tbody.innerHTML = "";
 
-      for (let i = 1; i < tr.length; i++) {
-        let visible = false;
-        const tds = tr[i].getElementsByTagName("td");
-        for (let j = 0; j < tds.length; j++) {
-          if (tds[j]) {
-            const txtValue = tds[j].textContent || tds[j].innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-              visible = true;
-              break;
-            }
-          }
-        }
-        tr[i].style.display = visible ? "" : "none";
-      }
+      samples.forEach((item, index) => {
+        const rowStr = JSON.stringify(item).toUpperCase();
+        if (keyword && rowStr.indexOf(keyword) === -1) return;
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${item.sampleDate || '-'}</td>
+          <td><strong>${item.styleNo || '-'}</strong></td>
+          <td>
+            <div class="preview-container">
+              <a href=" '#'}" target="_blank" class="photo-link">📷 查看原样</a >
+              <div class="preview-popover">
+                < img src="${item.photo || ''}" alt="原样" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'180\' height=\'130\'><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'13\'>暂无图片</text></svg>'">
+              </div>
+            </div>
+          </td>
+          <td>${item.yarnDate || '-'}</td>
+          <td>${item.yarnInfo || '-'}</td>
+          <td>${item.weaveDate || '-'}</td>
+          <td>${item.weaveFactory || '-'}</td>
+          <td>${item.postInfo || '-'}</td>
+          <td>
+            <button class="btn" style="padding:4px 8px; font-size:12px;" onclick="openEditModal(${index})">编辑</button>
+            <button class="btn btn-danger" style="padding:4px 8px; font-size:12px;" onclick="deleteData(${index})">删除</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
     }
-  </script>
-</body>
-</html>
+
+    // 打开新增弹窗
+    function openAddModal() {
+      document.getElementById("modalTitle").innerText = "新增样单";
+      document.getElementById("editIndex").value = "";
+      document.getElementById("f_sampleDate").value = new Date().toISOString().split('T')[0];
+      document.getElementById("f_styleNo").value = "";
+      document.getElementById("f_photo").value = "";
+      document.getElementById("f_yarnDate").value = "";
+      document.getElementById("f_yarnInfo").value = "";
+      document.getElementById("f_weaveDate").value = "";
+      document.getElementById("f_weaveFactory").value = "";
+      document.getElementById("f_postInfo").value = "";
+      document.getElementById("editModal").style.display = "flex";
+    }
+
+    // 打开编辑弹窗
+    function openEditModal(index) {
+      const item = samples[index];
+      document.getElementById("modalTitle").innerText = "编辑样单";
+      document.getElementById("editIndex").value = index;
+      document.getElementById("f_sampleDate").value = item.sampleDate || "";
+      document.getElementById("f_styleNo").value = item.styleNo || "";
+      document.getElementById("f_photo").value = item.photo || "";
+      document.getElementById("f_yarnDate").value = item.yarnDate || "";
+      document.getElementById("f_yarnInfo").value = item.yarnInfo || "";
+      document.getElementById("f_weaveDate").value = item.weaveDate || "";
+      document.getElementById("f_weaveFactory").value = item.weaveFactory || "";
+      document.getElementById("f_postInfo").value = item.postInfo || "";
+      document.getElementById("editModal").style.display = "flex";
+    }
+
+    // 关闭弹窗
+    function closeModal() {
+      document.getElementById("editModal").style.display = "none";
+    }
+
+    // 保存数据
+    function saveData() {
+      const index = document.getElementById("editIndex").value;
+      const newItem = {
+        sampleDate: document.getElementById("f_sampleDate").value,
+        styleNo: document.getElementById("f_styleNo").value,
+        photo: document.getElementById("f_photo").value,
+        yarnDate: document.getElementById("f_yarnDate").value,
+        yarnInfo: document.getElementById("f_yarnInfo").value,
+        weaveDate: document.getElementById("f_weaveDate").value,
+        weaveFactory: document.getElementById("f_weaveFactory").value,
+        postInfo: document.getElementById("f_postInfo").value
+      };
+
+      if (!newItem.styleNo) {
+        alert("款号不能为空！");
+        return;
+      }
+
+      if (index === "") {
+        samples.unshift(newItem); // 新增排在最前
+      } else {
+        samples[index] = newItem; // 修改
+      }
+
+      localStorage.setItem("xinya_samples", JSON.stringify(samples));
+      closeModal();
+      renderTable();
+    }
+
+    // 删除数据
+    function deleteData(index) {
+      if (confirm("确定要删除这条样单记录吗？")) {
+        samples.splice(index, 1);
+        localStorage.setItem("xinya_samples", JSON.stringify(
